@@ -1,0 +1,17 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/*",
+  "py-stk",
+]
+
+[workspace.package]
+version = "0.1.0"
+authors = [
+  "Lukas Turcani <lukasturcani93@gmail.com>",
+]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/lukasturcani/stk"
+
+[workspace.dependencies]
