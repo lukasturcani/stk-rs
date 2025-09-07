@@ -4,7 +4,7 @@ use crate::errors::into_pyerr;
 use pyo3::prelude::*;
 use stk_molecular_graph::MolecularGraph;
 
-#[pyclass(frozen)]
+#[pyclass(frozen, module = "stk.molecular_graph", name = "MolecularGraph")]
 #[repr(transparent)]
 pub struct PyMolecularGraph {
     pub graph: RwLock<MolecularGraph>,
