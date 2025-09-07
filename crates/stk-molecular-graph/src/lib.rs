@@ -6,7 +6,9 @@ pub mod parser;
 pub use atom::Atom;
 pub use bond::Bond;
 pub use graph::MolecularGraph;
-pub use parser::{SmilesParser, SmartsParser};
+pub use parser::{SmartsParser, SmilesParser};
+
+use stk_error::StkError;
 
 impl MolecularGraph {
     /// Parse a SMILES string into a molecular graph
@@ -25,15 +27,24 @@ impl MolecularGraph {
     }
 
     /// Find all matches of a SMARTS pattern in this molecular graph
-    pub fn find_smarts_matches(&self, smarts_pattern: &str) -> Result<Vec<std::collections::HashMap<crate::graph::AtomId, crate::graph::AtomId>>, ParseError> {
+    pub fn find_smarts_matches(
+        &self,
+        smarts_pattern: &str,
+    ) -> Result<
+        Vec<std::collections::HashMap<crate::graph::AtomId, crate::graph::AtomId>>,
+        ParseError,
+    > {
         let pattern = Self::from_smarts(smarts_pattern)?;
         Ok(self.find_all_substructure_matches(&pattern))
     }
 
     /// Find all substructure matches (returns atom mappings)
-    pub fn find_all_substructure_matches(&self, pattern: &MolecularGraph) -> Vec<std::collections::HashMap<crate::graph::AtomId, crate::graph::AtomId>> {
+    pub fn find_all_substructure_matches(
+        &self,
+        pattern: &MolecularGraph,
+    ) -> Vec<std::collections::HashMap<crate::graph::AtomId, crate::graph::AtomId>> {
         let mut all_matches = Vec::new();
-        
+
         if pattern.atom_count() > self.atom_count() {
             return all_matches;
         }
@@ -44,20 +55,23 @@ impl MolecularGraph {
                 let mut mapping = std::collections::HashMap::new();
                 if pattern.match_recursive(pattern_root, target_root, self, &mut mapping) {
                     // Check if this mapping is unique (not already found)
-                    if !all_matches.iter().any(|existing_mapping| mappings_equivalent(existing_mapping, &mapping)) {
+                    if !all_matches
+                        .iter()
+                        .any(|existing_mapping| mappings_equivalent(existing_mapping, &mapping))
+                    {
                         all_matches.push(mapping);
                     }
                 }
             }
         }
-        
+
         all_matches
     }
 }
 
 fn mappings_equivalent(
     map1: &std::collections::HashMap<crate::graph::AtomId, crate::graph::AtomId>,
-    map2: &std::collections::HashMap<crate::graph::AtomId, crate::graph::AtomId>
+    map2: &std::collections::HashMap<crate::graph::AtomId, crate::graph::AtomId>,
 ) -> bool {
     map1.len() == map2.len() && map1.iter().all(|(k, v)| map2.get(k) == Some(v))
 }
@@ -82,6 +96,12 @@ impl std::fmt::Display for ParseError {
 }
 
 impl std::error::Error for ParseError {}
+
+impl From<ParseError> for StkError {
+    fn from(err: ParseError) -> Self {
+        Self::Parse(err.into())
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -113,7 +133,7 @@ mod tests {
     fn test_parse_bracketed_atom() {
         let graph = MolecularGraph::from_smiles("[NH3+]").unwrap();
         assert_eq!(graph.atom_count(), 1);
-        
+
         let atom = graph.get_atoms().values().next().unwrap();
         assert_eq!(atom.element, Element::N);
         assert_eq!(atom.charge, 1);
@@ -138,7 +158,7 @@ mod tests {
     fn test_substructure_search_simple() {
         let molecule = MolecularGraph::from_smiles("CCCO").unwrap();
         let pattern = MolecularGraph::from_smiles("CCO").unwrap();
-        
+
         assert!(molecule.contains_substructure(&pattern));
     }
 
@@ -146,7 +166,7 @@ mod tests {
     fn test_substructure_search_not_found() {
         let molecule = MolecularGraph::from_smiles("CCC").unwrap();
         let pattern = MolecularGraph::from_smiles("CCO").unwrap();
-        
+
         assert!(!molecule.contains_substructure(&pattern));
     }
 
@@ -154,7 +174,7 @@ mod tests {
     fn test_smarts_pattern_matching() {
         let molecule = MolecularGraph::from_smiles("CCCO").unwrap();
         let matches = molecule.find_smarts_matches("CCO").unwrap();
-        
+
         assert!(!matches.is_empty());
     }
 
@@ -162,7 +182,7 @@ mod tests {
     fn test_benzene_ring_pattern() {
         let molecule = MolecularGraph::from_smiles("c1ccccc1").unwrap();
         let pattern = MolecularGraph::from_smarts("c1ccc(cc1)").unwrap();
-        
+
         assert!(molecule.contains_substructure(&pattern));
     }
 
@@ -170,7 +190,7 @@ mod tests {
     fn test_aromatic_carbon_matching() {
         let molecule = MolecularGraph::from_smiles("c1ccccc1").unwrap();
         let pattern = MolecularGraph::from_smarts("c").unwrap();
-        
+
         let matches = molecule.find_all_substructure_matches(&pattern);
         assert_eq!(matches.len(), 6); // Should match all 6 carbons in benzene
     }
@@ -197,20 +217,25 @@ mod tests {
     #[test]
     fn test_chirality_parsing() {
         let graph = MolecularGraph::from_smiles("[C@H](O)(N)C").unwrap();
-        
+
         // Find the chiral carbon
-        let chiral_atom = graph.get_atoms().values()
+        let chiral_atom = graph
+            .get_atoms()
+            .values()
             .find(|atom| atom.chirality.is_some())
             .unwrap();
-        
+
         assert_eq!(chiral_atom.element, Element::C);
-        assert!(matches!(chiral_atom.chirality, Some(crate::atom::Chirality::Clockwise)));
+        assert!(matches!(
+            chiral_atom.chirality,
+            Some(crate::atom::Chirality::Clockwise)
+        ));
     }
 
     #[test]
     fn test_charged_atom_parsing() {
         let graph = MolecularGraph::from_smiles("[O-2]").unwrap();
-        
+
         let atom = graph.get_atoms().values().next().unwrap();
         assert_eq!(atom.element, Element::O);
         assert_eq!(atom.charge, -2);
@@ -219,7 +244,7 @@ mod tests {
     #[test]
     fn test_hydrogen_count_parsing() {
         let graph = MolecularGraph::from_smiles("[CH3]").unwrap();
-        
+
         let atom = graph.get_atoms().values().next().unwrap();
         assert_eq!(atom.element, Element::C);
         assert_eq!(atom.explicit_hydrogens, 3);
@@ -230,7 +255,7 @@ mod tests {
         let graph = MolecularGraph::from_smiles("C=C").unwrap();
         assert_eq!(graph.atom_count(), 2);
         assert_eq!(graph.bond_count(), 1);
-        
+
         // Check that the bond is a double bond
         let bond = graph.get_bonds().values().next().unwrap();
         assert_eq!(bond.2.bond_type, crate::bond::BondType::Double);
@@ -241,7 +266,7 @@ mod tests {
         let graph = MolecularGraph::from_smiles("C#C").unwrap();
         assert_eq!(graph.atom_count(), 2);
         assert_eq!(graph.bond_count(), 1);
-        
+
         let bond = graph.get_bonds().values().next().unwrap();
         assert_eq!(bond.2.bond_type, crate::bond::BondType::Triple);
     }
@@ -252,12 +277,14 @@ mod tests {
         let graph = MolecularGraph::from_smiles("CCO").unwrap();
         assert_eq!(graph.atom_count(), 3);
         assert_eq!(graph.bond_count(), 2);
-        
+
         // Check elements
-        let elements: Vec<_> = graph.get_atoms().values()
+        let elements: Vec<_> = graph
+            .get_atoms()
+            .values()
             .map(|atom| &atom.element)
             .collect();
-        
+
         assert!(elements.contains(&&Element::C));
         assert!(elements.contains(&&Element::O));
     }
@@ -266,7 +293,8 @@ mod tests {
     fn test_pattern_matching_with_branches() {
         let molecule = MolecularGraph::from_smiles("CC(C)(C)O").unwrap(); // tert-butanol
         let pattern = MolecularGraph::from_smiles("C(C)(C)C").unwrap(); // quaternary carbon pattern
-        
+
         assert!(molecule.contains_substructure(&pattern));
     }
 }
+

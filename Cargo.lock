@@ -191,6 +191,7 @@ name = "stk-molecular-graph"
 version = "0.1.0"
 dependencies = [
  "regex",
+ "stk-error",
 ]
 
 [[package]]

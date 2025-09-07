@@ -20,7 +20,7 @@ impl PyMolecularGraph {
 #[pymethods]
 impl PyMolecularGraph {
     pub fn from_smiles(&self, smiles: &str) -> PyResult<PyMolecularGraph> {
-        let graph = MolecularGraph::from_smiles(smiles)?;
+        let graph = MolecularGraph::from_smiles(smiles).into()?;
         Ok(PyMolecularGraph::new(graph))
     }
 
