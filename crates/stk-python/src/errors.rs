@@ -27,10 +27,3 @@ impl From<PyStkError> for PyErr {
 pub fn into_pyerr(err: StkError) -> PyErr {
     PyStkError::from(err).into()
 }
-
-#[pymodule]
-pub fn errors(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add("StkError", m.py().get_type::<PyBaseStkError>())?;
-    m.add("ParseError", m.py().get_type::<PyStkParseError>())?;
-    Ok(())
-}
