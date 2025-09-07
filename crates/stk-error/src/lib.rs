@@ -43,13 +43,13 @@ impl Display for ErrorString {
 
 #[derive(Error, Debug, PartialEq, Eq, Clone)]
 pub enum StkError {
-    ParseError(ErrorString),
+    Parse(ErrorString),
 }
 
 impl Display for StkError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            StkError::ParseError(msg) => write!(f, "Parse error: {}", msg),
+            StkError::Parse(msg) => write!(f, "Parse error: {}", msg),
         }
     }
 }

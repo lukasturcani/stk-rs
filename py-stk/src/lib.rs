@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use pyo3::wrap_pymodule;
+use stk_python::error::error_module;
 use stk_python::molecular_graph::PyMolecularGraph;
 
 /// A Python module implemented in Rust.
