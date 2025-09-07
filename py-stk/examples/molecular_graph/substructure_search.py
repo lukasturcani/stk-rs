@@ -1,13 +1,13 @@
-import stk
+from stk.molecular_graph import MolecularGraph
 import itertools
 
 
 def main() -> None:
     molecules = [
-        stk.MolecularGraph.from_smiles(""),
+        MolecularGraph.from_smiles(""),
     ]
     patterns = [
-        stk.MolecularGraph.from_smarts(""),
+        MolecularGraph.from_smarts(""),
     ]
 
     for molecule, pattern in itertools.product(molecules, patterns):
