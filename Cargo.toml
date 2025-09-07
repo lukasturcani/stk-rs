@@ -20,3 +20,4 @@ repository = "https://github.com/lukasturcani/stk"
 [workspace.dependencies]
 regex = "1.0"
 stk-molecular-graph = { version = "0.1.0", path = "crates/stk-molecular-graph" }
+stk-python = { version = "0.1.0", path = "crates/stk-python" }
