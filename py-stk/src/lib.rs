@@ -12,3 +12,8 @@ fn stk(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
     Ok(())
 }
+
+#[pymodule]
+fn molecular_graph(m: &PyModule) -> PyResult<()> {
+    Ok(())
+}
