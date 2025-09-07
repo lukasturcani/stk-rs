@@ -3,7 +3,7 @@ use pyo3::prelude::*;
 /// A Python module implemented in Rust.
 #[pymodule]
 fn stk(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_submodule();
+    m.add_wrapped(wrap_pymodule!(molecular_graph));
     Ok(())
 }
 
