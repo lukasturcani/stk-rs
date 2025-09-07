@@ -3,8 +3,8 @@ use pyo3::exceptions::PyException;
 use pyo3::prelude::*;
 use stk_error::StkError;
 
-create_exception!(error_module, PyBaseStkError, PyException);
-create_exception!(error_module, PyStkParseError, PyBaseStkError);
+create_exception!(errors, PyBaseStkError, PyException);
+create_exception!(errors, PyStkParseError, PyBaseStkError);
 
 pub enum PyStkError {
     Stk(StkError),
