@@ -26,5 +26,6 @@ fn setup_errors(py: Python<'_>) -> PyResult<()> {
     let errors = PyModule::new(py, "stk.errors")?;
     errors.add("StkError", errors.py().get_type::<PyBaseStkError>())?;
     errors.add("ParseError", errors.py().get_type::<PyStkParseError>())?;
+    py_run!(py, errors, "import sys; sys.modules['stk.errors'] = errors");
     Ok(())
 }
