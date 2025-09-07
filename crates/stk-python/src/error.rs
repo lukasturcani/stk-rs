@@ -6,7 +6,7 @@ use stk_error::StkError;
 create_exception!(error_module, PyBaseStkError, PyException);
 create_exception!(error_module, PyStkParseError, PyBaseStkError);
 
-enum PyStkError {
+pub enum PyStkError {
     Stk(StkError),
 }
 
@@ -24,8 +24,12 @@ impl From<PyStkError> for PyErr {
     }
 }
 
+pub fn into_pyerr(err: StkError) -> PyErr {
+    PyStkError::from(err).into()
+}
+
 #[pymodule]
-fn error_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
+pub fn error_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("StkError", m.py().get_type::<PyBaseStkError>())?;
     m.add("ParseError", m.py().get_type::<PyStkParseError>())?;
     Ok(())
