@@ -1,2 +1,2 @@
-mod error;
-mod molecular_graph;
+pub mod error;
+pub mod molecular_graph;

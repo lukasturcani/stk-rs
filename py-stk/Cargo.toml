@@ -10,4 +10,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { workspace = true }
-stk-molecular-graph = { workspace = true }
+stk-python = { workspace = true }
