@@ -98,8 +98,8 @@ impl std::fmt::Display for ParseError {
 impl std::error::Error for ParseError {}
 
 impl From<ParseError> for StkError {
-    fn from(err: ParseError) -> Self {
-        Self::Parse(err.into())
+    fn from(_: ParseError) -> Self {
+        Self::Parse("bad parse sorry".into())
     }
 }
 
