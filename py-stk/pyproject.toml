@@ -23,4 +23,5 @@ features = ["pyo3/extension-module"]
 dev = [
     "pytest-benchmark>=4.0.0",
     "pytest-clarity>=1.0.1",
+    "rdkit>=2025.3.6",
 ]
