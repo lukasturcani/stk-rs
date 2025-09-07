@@ -7,4 +7,5 @@ repository = { workspace = true }
 
 [dependencies]
 pyo3 = { workspace = true }
+stk-error = { workspace = true }
 stk-molecular-graph = { workspace = true }
