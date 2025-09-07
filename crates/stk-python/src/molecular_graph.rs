@@ -1,6 +1,6 @@
 use std::sync::RwLock;
 
-use crate::error::into_pyerr;
+use crate::errors::into_pyerr;
 use pyo3::prelude::*;
 use stk_molecular_graph::MolecularGraph;
 

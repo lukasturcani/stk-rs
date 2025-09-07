@@ -29,8 +29,7 @@ pub fn into_pyerr(err: StkError) -> PyErr {
 }
 
 #[pymodule]
-#[pyo3(name = "errors")]
-pub fn error_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
+pub fn errors(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("StkError", m.py().get_type::<PyBaseStkError>())?;
     m.add("ParseError", m.py().get_type::<PyStkParseError>())?;
     Ok(())
