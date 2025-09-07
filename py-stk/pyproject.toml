@@ -18,10 +18,13 @@ features = ["pyo3/extension-module"]
 
 [dependency-groups]
 dev = [
+    "furo>=2024.8.6",
     "mypy>=1.14.1",
     "pytest>=8.3.5",
     "pytest-benchmark>=4.0.0",
     "pytest-clarity>=1.0.1",
     "rdkit>=2025.3.6",
     "ruff>=0.12.12",
+    "sphinx>=7.1.2",
+    "sphinx-copybutton>=0.5.2",
 ]
