@@ -3,7 +3,7 @@ use std::fmt::{self, Display, Formatter};
 use std::ops::Deref;
 use thiserror::Error;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ErrorString(Cow<'static, str>);
 
 impl ErrorString {
@@ -44,4 +44,12 @@ impl Display for ErrorString {
 #[derive(Error, Debug, PartialEq, Eq, Clone)]
 pub enum StkError {
     ParseError(ErrorString),
+}
+
+impl Display for StkError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            StkError::ParseError(msg) => write!(f, "Parse error: {}", msg),
+        }
+    }
 }
