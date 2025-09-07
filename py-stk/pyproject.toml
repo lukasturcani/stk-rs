@@ -18,3 +18,9 @@ tests = [
 [tool.maturin]
 python-source = "python"
 features = ["pyo3/extension-module"]
+
+[dependency-groups]
+dev = [
+    "pytest-benchmark>=4.0.0",
+    "pytest-clarity>=1.0.1",
+]
