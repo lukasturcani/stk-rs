@@ -6,4 +6,5 @@ license = { workspace = true }
 repository = { workspace = true }
 
 [dependencies]
+pyo3 = { workspace = true }
 stk-molecular-graph = { workspace = true }

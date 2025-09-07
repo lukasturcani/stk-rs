@@ -9,5 +9,5 @@ name = "stk"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.25.0"
+pyo3 = { workspace = true }
 stk-molecular-graph = { workspace = true }
