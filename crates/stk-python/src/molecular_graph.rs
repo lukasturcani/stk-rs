@@ -28,12 +28,4 @@ impl PyMolecularGraph {
         let graph = MolecularGraph::from_smarts(smarts)?;
         Ok(PyMolecularGraph::new(graph))
     }
-
-    pub fn has_substructure(&self, other: &PyMolecularGraph) -> PyResult<bool> {
-        Ok(self
-            .graph
-            .read()
-            .unwrap()
-            .contains_substructure(&other.graph.read().unwrap()))
-    }
 }

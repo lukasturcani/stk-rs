@@ -1,18 +1,32 @@
 use pyo3::create_exception;
 use pyo3::exceptions::PyException;
 use pyo3::prelude::*;
-use std::error::Error;
 use stk_error::StkError;
 
-create_exception!(error_module, PyStkError, PyException);
-create_exception!(error_module, PyStkParseError, PyStkError);
+create_exception!(error_module, PyBaseStkError, PyException);
+create_exception!(error_module, PyStkParseError, PyBaseStkError);
 
+enum PyStkError {
+    Stk(StkError),
+}
 
-impl From<
+impl From<StkError> for PyStkError {
+    fn from(err: StkError) -> Self {
+        Self::Stk(err)
+    }
+}
+
+impl From<PyStkError> for PyErr {
+    fn from(err: PyStkError) -> Self {
+        match err {
+            PyStkError::Stk(StkError::Parse(msg)) => PyStkParseError::new_err(msg.to_string()),
+        }
+    }
+}
 
 #[pymodule]
 fn error_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add("StkError", m.py().get_type::<PyStkError>())?;
+    m.add("StkError", m.py().get_type::<PyBaseStkError>())?;
     m.add("ParseError", m.py().get_type::<PyStkParseError>())?;
     Ok(())
 }
