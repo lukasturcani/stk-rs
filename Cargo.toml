@@ -24,3 +24,6 @@ stk-error = { version = "0.1.0", path = "crates/stk-error" }
 stk-molecular-graph = { version = "0.1.0", path = "crates/stk-molecular-graph" }
 stk-python = { version = "0.1.0", path = "crates/stk-python" }
 thiserror = "2.0.16"
+
+[workspace.lints.rust]
+rust-2018-idioms = "warn"

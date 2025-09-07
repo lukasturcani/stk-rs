@@ -5,7 +5,7 @@ use stk_python::molecular_graph::PyMolecularGraph;
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn stk(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn stk(m: &Bound<PyModule>) -> PyResult<()> {
     m.add_wrapped(wrap_pymodule!(molecular_graph))?;
     m.add_wrapped(wrap_pymodule!(error_module))?;
     Ok(())
