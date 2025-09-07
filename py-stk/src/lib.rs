@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use pyo3::wrap_pymodule;
+use stk_molecular_graph::MolecularGraph;
 
 /// A Python module implemented in Rust.
 #[pymodule]
@@ -9,6 +10,7 @@ fn stk(m: &Bound<'_, PyModule>) -> PyResult<()> {
 }
 
 #[pymodule]
-fn molecular_graph(_: &Bound<'_, PyModule>) -> PyResult<()> {
-    Ok(())
+fn molecular_graph(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_class::<MolecularGraph>()?;
+    m.Ok(())
 }
