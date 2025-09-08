@@ -2,7 +2,10 @@
 
 import itertools
 
+from rich.console import Console
 from stk.molecular_graph import MolecularGraph
+
+console = Console()
 
 
 def main() -> None:
