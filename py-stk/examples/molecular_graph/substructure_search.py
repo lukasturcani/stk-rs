@@ -1,8 +1,12 @@
-from stk.molecular_graph import MolecularGraph
+"""Substructure search example."""
+
 import itertools
+
+from stk.molecular_graph import MolecularGraph
 
 
 def main() -> None:
+    """Run the example."""
     molecules = [
         MolecularGraph.from_smiles(""),
     ]
