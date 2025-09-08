@@ -27,7 +27,7 @@ impl PyMolecularGraph {
         Ok(PyMolecularGraph::new(graph))
     }
 
-    /// Create a :classs:`.MolecularGraph` from a SMARTS string.
+    /// Create a :class:`.MolecularGraph` from a SMARTS string.
     pub fn from_smarts(&self, smarts: &str) -> PyResult<PyMolecularGraph> {
         let graph = MolecularGraph::from_smarts(smarts).map_err(|err| into_pyerr(err.into()))?;
         Ok(PyMolecularGraph::new(graph))
